@@ -1,7 +1,5 @@
-package com.example.brightpass2;
+package com.example.Pinv2;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.InputType;
@@ -14,16 +12,20 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-import java.lang.*;
-import java.util.*;
-import android.content.Intent;
-import android.provider.Settings;
-import java.util.Calendar;
 
-public class MainActivity extends AppCompatActivity
-{
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Iterator;
+import java.util.Random;
+
+public class MainActivity extends AppCompatActivity {
+    Randomarr ra = new Randomarr();
+    TextView[] rarr;
     TextView[] e;
-    TextView pop1,pop2,sec;
+    TextView pop1,pop2;
     TextView time;
     String pin;
     Button closePopupBtn;
@@ -34,60 +36,37 @@ public class MainActivity extends AppCompatActivity
     ArrayList<Integer> i1;
     Context context;
     Calendar c;
+    String finalpin;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        String time_temp;
         c = Calendar.getInstance();
         int mHour = c.get(Calendar.HOUR);
         int mMinute = c.get(Calendar.MINUTE);
-        time = (TextView) findViewById(R.id.editText20);
+        time = findViewById(R.id.editText20);
         if (mMinute < 10 && mHour < 10)
         {
             time.setText("0" + mHour + ":0" + mMinute);
-           // time_temp="0" + mHour + "0" + mMinute;
         }
         else if (mMinute < 10)
         {
             time.setText(mHour + ":0" + mMinute);
-          //  time_temp=mHour + "0" + mMinute;
         }
         else if (mHour < 10)
         {
             time.setText("0" + mHour + ":" + mMinute);
-           // time_temp="0" + mHour + mMinute;
         }
         else {
             time.setText(mHour + ":" + mMinute);
-          //  time_temp=mHour + mMinute;
         }
+        initialise();
+        assign_rand();
+        finalpin = calculate_secret();
 
-
-        context = getApplicationContext();
-        boolean settingsCanWrite = hasWriteSettingsPermission(context);
-
-        if (!settingsCanWrite) {
-            changeWriteSettingsPermission(context);
-        }
-
-
-        pin = "4869";
-        l = new LieSequence();
-        l.generate();
-        i1 = l.i1;
-        e = new TextView[7];
-        linearLayout1 = findViewById(R.id.linearLayout1);
-        e[0] =  findViewById(R.id.textView2);
-        e[1] =  findViewById(R.id.textView3);
-        e[2] =  findViewById(R.id.textView7);
-        e[3] =  findViewById(R.id.textView6);
-        e[4] =  findViewById(R.id.textView5);
-        e[5] =  findViewById(R.id.textView8);
-        e[6] =  findViewById(R.id.textView4);
         for (int i = 0; i < 7; i++)
             e[i].setInputType(InputType.TYPE_NULL);
-        checkbrigthness(0);
         e[0].requestFocus();
         e[0].setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View arg0, MotionEvent arg1) {
@@ -138,37 +117,66 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-
     }
 
-    private void changeScreenBrightness(Context context, int screenBrightnessValue)
-    {
-        // Change the screen brightness change mode to manual.
-       // Settings.System.putInt(context.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS_MODE, Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
-        // Apply the screen brightness value to the system, this will change the value in Settings ---> Display ---> Brightness level.
-        // It will also change the screen brightness for the device.
-       // Settings.System.putInt(context.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS, screenBrightnessValue);
+    public void initialise() {
+        rarr = new TextView[10];
+        pin = "1234";
+        l = new LieSequence();
+        l.generate();
+        i1 = l.i1;
+        e = new TextView[7];
+        linearLayout1 = findViewById(R.id.linearLayout1);
+        e[0] = findViewById(R.id.textView2);
+        e[1] = findViewById(R.id.textView3);
+        e[2] = findViewById(R.id.textView7);
+        e[3] = findViewById(R.id.textView6);
+        e[4] = findViewById(R.id.textView5);
+        e[5] = findViewById(R.id.textView8);
+        e[6] = findViewById(R.id.textView4);
+        rarr[0] = findViewById(R.id.textView);
+        rarr[1] = findViewById(R.id.textView10);
+        rarr[2] = findViewById(R.id.textView12);
+        rarr[3] = findViewById(R.id.textView11);
+        rarr[4] = findViewById(R.id.textView13);
+        rarr[5] = findViewById(R.id.textView17);
+        rarr[6] = findViewById(R.id.textView16);
+        rarr[7] = findViewById(R.id.textView18);
+        rarr[8] = findViewById(R.id.textView15);
+        rarr[9] = findViewById(R.id.textView14);
+        ra.generate();
+    }
 
+    public void assign_rand() {
+        for (int i = 0; i < 10; i++) {
+            rarr[i].setText(Integer.toString(ra.b[i / 5][i % 5]));
+        }
+    }
+
+    String calculate_secret() {
+        int temp = Integer.parseInt(pin);
+        int[] aa;
+        String secretpin = "";
+        aa = new int[4];
+        for (int i = 0; i < 4; i++) {
+            aa[3 - i] = temp % 10 + Integer.parseInt(rarr[temp % 10 - 1].getText().toString());
+            aa[3 - i] = aa[3 - i] % 10;
+            temp = temp / 10;
+        }
+        for (int i = 0; i < 4; i++) {
+            temp = temp * 10 + aa[i];
+        }
+        secretpin = Integer.toString(temp);
+        if (secretpin.length() != 4)
+            secretpin = "0" + secretpin;
+        return secretpin;
+
+    }
+    private void changeScreenBrightness(Context context, int screenBrightnessValue) {
         Window window = getWindow();
         WindowManager.LayoutParams layoutParams = window.getAttributes();
         layoutParams.screenBrightness = screenBrightnessValue / 255f;
         window.setAttributes(layoutParams);
-
-    }
-
-    private boolean hasWriteSettingsPermission(Context context)
-    {
-        boolean ret = true;
-        // Get the result from below code.
-        ret = Settings.System.canWrite(context);
-        return ret;
-    }
-
-    // Start can modify system settings panel to let user change the write settings permission.
-    private void changeWriteSettingsPermission(Context context)
-    {
-        Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
-        context.startActivity(intent);
     }
 
     public void enterpin(View view) {
@@ -201,31 +209,25 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    public boolean checkpin()
-    {
+    public boolean checkpin() {
 
         StringBuilder sb=new StringBuilder();
         Iterator i = i1.iterator();
-        int temp;
         for(int k=0;k<4;k++)
         {
             sb.append(e[(int)i.next()].getText());
         }
-        if(sb.toString().equals(pin))
-            return true;
-        else return false;
+        return sb.toString().equals(finalpin);
     }
 
-    public void checkbrigthness(int k)
-    {
+    public void checkbrigthness(int k) {
         if(i1.contains(k))
             changeScreenBrightness(context, 240);
         else
             changeScreenBrightness(context, 5);
     }
 
-    public void entertext(String k,String t)
-        {
+    public void entertext(String k,String t) {
             if(!k.equals("Del") && !k.equals("Ok"))
             {
                 switch (t) {
@@ -273,9 +275,9 @@ public class MainActivity extends AppCompatActivity
             {
                 LayoutInflater layoutInflater = (LayoutInflater) MainActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 View customView = layoutInflater.inflate(R.layout.popup, null);
-                closePopupBtn = (Button) customView.findViewById(R.id.closePopupBtn);
-                pop2=(TextView)customView.findViewById(R.id.textView9);
-                pop1=(TextView)customView.findViewById(R.id.textView50);
+                closePopupBtn = customView.findViewById(R.id.closePopupBtn);
+                pop2 = customView.findViewById(R.id.textView9);
+                pop1 = customView.findViewById(R.id.textView50);
                 boolean valid=checkpin();
 
               if(valid) {
@@ -323,24 +325,22 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onStart() {
         super.onStart();
-        checkbrigthness(Integer.parseInt(evalue));
+        checkbrigthness(0);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        checkbrigthness(Integer.parseInt(evalue));
     }
 
 }
 
-class LieSequence
-{
+class LieSequence {
     String Lie;
     ArrayList<Integer> i1;
     LieSequence()
     {
-        Lie=new String("0000000");
+        Lie = "0000000";
     }
 
     void generate()
@@ -384,14 +384,14 @@ class LieSequence
 }
 
 class Randomarr {
-    int b[][] = new int[2][5];
+    int[][] b = new int[2][5];
     public void generate() {
         Random r = new Random();
 
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 5; j++)
             {
-                b[i][j] = r.nextInt(4);
+                b[i][j] = r.nextInt(10);
             }
         }
     }

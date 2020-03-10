@@ -4,11 +4,11 @@ android {
     compileSdkVersion 28
     buildToolsVersion '29.0.2'
     defaultConfig {
-        applicationId "com.example.brightpass2"
+        applicationId "com.example.Pinv2"
         minSdkVersion 24
         targetSdkVersion 28
         versionCode 1
-        versionName "3.0"
+        versionName "2.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

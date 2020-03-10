@@ -1,4 +1,4 @@
-package com.example.brightpass2;
+package com.example.Pinv2;
 
 import org.junit.Test;
 
