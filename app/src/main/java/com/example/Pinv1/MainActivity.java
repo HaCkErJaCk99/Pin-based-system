@@ -1,4 +1,4 @@
-package com.example.brightpass;
+package com.example.Pinv1;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -18,7 +18,7 @@ import android.widget.TextView;
 import java.lang.*;
 import java.util.*;
 import android.content.Intent;
-import android.provider.Settings;
+
 import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity
@@ -46,29 +46,21 @@ public class MainActivity extends AppCompatActivity
         time = (TextView) findViewById(R.id.editText20);
         if (mMinute < 10 && mHour < 10) {
             time.setText("0" + mHour + ":0" + mMinute);
-            timepin="0"+Integer.toString(mHour)+"0"+Integer.toString(mHour);
+            timepin="0"+Integer.toString(mHour)+"0"+Integer.toString(mMinute);
         }
             else if (mMinute < 10)
         {
             time.setText(mHour + ":0" + mMinute);
-            timepin=Integer.toString(mHour)+"0"+Integer.toString(mHour);
+            timepin=Integer.toString(mHour)+"0"+Integer.toString(mMinute);
         }
         else if (mHour < 10)
         {
             time.setText("0" + mHour + ":" + mMinute);
-            timepin="0"+Integer.toString(mHour)+Integer.toString(mHour);
+            timepin="0"+Integer.toString(mHour)+Integer.toString(mMinute);
         }
         else {
             time.setText(mHour + ":" + mMinute);
-            timepin=Integer.toString(mHour)+Integer.toString(mHour);
-        }
-
-
-        context = getApplicationContext();
-        boolean settingsCanWrite = hasWriteSettingsPermission(context);
-
-        if (!settingsCanWrite) {
-            changeWriteSettingsPermission(context);
+            timepin=Integer.toString(mHour)+Integer.toString(mMinute);
         }
 
         intialize();
@@ -138,19 +130,6 @@ public class MainActivity extends AppCompatActivity
         window.setAttributes(layoutParams);
     }
 
-    private boolean hasWriteSettingsPermission(Context context)
-    {
-        boolean ret = true;
-        ret = Settings.System.canWrite(context);
-        return ret;
-    }
-
-    private void changeWriteSettingsPermission(Context context)
-    {
-        Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
-        context.startActivity(intent);
-    }
-
     public void enterpin(View view) {
         switch (view.getId()) {
             case R.id.button26: entertext("0",evalue);
@@ -214,8 +193,9 @@ public class MainActivity extends AppCompatActivity
             aa[3-i]=aa[3-i]%10;
             temp=temp/10;temp1=temp1/10;
         }
-
-        for(int i=0;i<4;i++) {
+        temp=0;
+        for(int i=0;i<4;i++)
+        {
             temp = temp * 10 + aa[i];
         }
         finalpin=Integer.toString(temp);
