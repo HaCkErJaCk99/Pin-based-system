@@ -4,7 +4,7 @@ android {
     compileSdkVersion 28
     buildToolsVersion '29.0.2'
     defaultConfig {
-        applicationId "com.example.brightpass3"
+        applicationId "com.example.pinv3"
         minSdkVersion 24
         targetSdkVersion 28
         versionCode 1

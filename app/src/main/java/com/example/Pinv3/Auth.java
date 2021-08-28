@@ -1,4 +1,4 @@
-package com.example.brightpass3;
+package com.example.Pinv3;
 
 import android.content.Context;
 import android.content.Intent;
@@ -17,18 +17,16 @@ public class Auth extends AppCompatActivity {
     TextView[] rarr;
     Button next;
     int secret;
-    int pin=4869;
+    int pin=1234;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.kim_et_al);
+        setContentView(R.layout.graphical_interface);
 
         ra.generate();
         initialise();
         assign_rand();
         secret=calculate_secret();
-        System.out.println(secret);
-        next.setText(Integer.toString(secret));
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -38,75 +36,76 @@ public class Auth extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-
-
     }
 
-    int calculate_secret()
-    {
-        int temp,a[];
-        a=new int[4];
-        temp=pin;
-        StringBuilder sb=new StringBuilder();
-        for(int i=3;i>=0;i--)
-        {
-            int t=temp%10;
-            a[i]=ra.b[(t-1)/5][(t-1)%5];temp=temp/10;
-            System.out.print(a[i]+"    ");
+    int calculate_secret() {
+        int temp_pin = pin;
+        int a[] = new int[4];
+        int array[] = new int[]{0 , 0 , 0 ,0};
+        int count = 3;
+        while(true) {
+            if(temp_pin > 0) {
+                array[count--] = temp_pin % 10;
+                temp_pin = temp_pin/10;
+            }
+            else {
+                break;
+            }
         }
-        temp=0;
+        for (int i = 0 ; i < 4; i++) {
+            int temp = array[i] - 1;
+            if(temp < 0) {
+                temp +=10;
+            }
+            int x = temp / 5;
+            int y = temp % 5;
+            a[i] = ra.b[x][y];
+        }
+
+        int temp=0;
         int index=ra.start;
-        System.out.println(index);
         for(int i=0;i<4;i++)
         {
-
             switch(a[i])
             {
                 case 0:
                 {
                     index=(index+5)%25;
                     temp=temp*10+Integer.parseInt(rarr[index].getText().toString());
-                    System.out.print(temp+"    ");
                     break;
                 }
 
                 case 1:
                 {
                     index=(index+20)%25;
-                    temp=temp*10+Integer.parseInt(rarr[(index+20)%25].getText().toString());
-                    System.out.print(temp+"    ");
+                    temp=temp*10+Integer.parseInt(rarr[index].getText().toString());
                     break;
                 }
 
                 case 2:
                 {
-                    if((index)%5==1)
+                    if((index)%5==0)
                         index=index+4;
                     else index=index-1;
                     temp=temp*10+Integer.parseInt(rarr[index].getText().toString());
-                    System.out.print(temp+"    ");
                     break;
                 }
 
                 case 3:
                 {
-                    if((index)%5==0)
+                    if((index)%5==4)
                         index=index-4;
                     else index=index+1;
                     temp=temp*10+Integer.parseInt(rarr[index].getText().toString());
-                    System.out.print(temp+"    ");
                     break;
                 }
 
             }
-            System.out.println(index);
         }
         return temp;
     }
 
-    public void initialise()
-    {
+    public void initialise() {
         rarr = new TextView[35];
         rarr[0] = findViewById(R.id.textView11);
         rarr[1] = findViewById(R.id.textView12);
@@ -146,8 +145,7 @@ public class Auth extends AppCompatActivity {
         next = findViewById(R.id.button);
     }
 
-    public void assign_rand()
-    {
+    public void assign_rand() {
 
         for(int i=0;i<25;i++)
         {
@@ -196,9 +194,7 @@ class Randomarr {
             for (int i = 0; i < 2; i++) {
                 for (int j = 0; j < 5; j++) {
                     b[i][j] = r.nextInt(4);
-                    System.out.print(b[i][j]);
                 }
-                System.out.println();
             }
             start = r.nextInt(25);
 

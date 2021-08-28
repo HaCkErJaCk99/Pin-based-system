@@ -1,4 +1,4 @@
-package com.example.brightpass3;
+package com.example.Pinv3;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -21,13 +21,12 @@ import android.content.Intent;
 import android.provider.Settings;
 import java.util.Calendar;
 
-public class MainActivity extends AppCompatActivity
-{
+public class MainActivity extends AppCompatActivity {
     TextView[] e;
     TextView pop1,pop2,sec;
     TextView time;
-    String pin,secret="",final_pin;
-    Button closePopupBtn,ch_lay,back;
+    String pin,secret="";
+    Button closePopupBtn,back;
     PopupWindow popupWindow;
     ConstraintLayout linearLayout1;
     String evalue="1";
@@ -35,7 +34,7 @@ public class MainActivity extends AppCompatActivity
     ArrayList<Integer> i1;
     Context context;
     Calendar c;
-    View pinView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,21 +63,11 @@ public class MainActivity extends AppCompatActivity
             time.setText(mHour + ":" + mMinute);
         }
 
-        context = getApplicationContext();
-        boolean settingsCanWrite = hasWriteSettingsPermission(context);
-
-        if (!settingsCanWrite)
-        {
-            changeWriteSettingsPermission(context);
-        }
-
         initialise();
 
         for (int i = 0; i < 7; i++)
             e[i].setInputType(InputType.TYPE_NULL);
-        checkbrigthness(0);
         e[0].requestFocus();
-        final_pin=finalpin();
 
         e[0].setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View arg0, MotionEvent arg1) {
@@ -143,8 +132,7 @@ public class MainActivity extends AppCompatActivity
         Uri appLinkData = appLinkIntent.getData();
     }
 
-    private void changeScreenBrightness(Context context, int screenBrightnessValue)
-    {
+    private void changeScreenBrightness(Context context, int screenBrightnessValue) {
         // Change the screen brightness change mode to manual.
        // Settings.System.putInt(context.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS_MODE, Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
         // Apply the screen brightness value to the system, this will change the value in Settings ---> Display ---> Brightness level.
@@ -158,9 +146,8 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    public void initialise()
-    {
-        pin = "4869";
+    public void initialise() {
+        pin = "1234";
         l = new LieSequence();
         l.generate();
         i1 = l.i1;
@@ -175,45 +162,6 @@ public class MainActivity extends AppCompatActivity
         e[6] = findViewById(R.id.textView4);
         back=   findViewById(R.id.button2);
         sec = findViewById(R.id.textView77);
-    }
-
-    public String finalpin()
-    {
-        int temp[],temp1[],res=0,p1,p2;
-        String result;
-        p1=Integer.parseInt(pin);
-        p2=Integer.parseInt(secret);
-        temp=new int[4];
-        temp1=new int[4];
-        for(int i=3;i>=0;i--)
-        {
-            temp[i]=p1%10;p1=p1/10;
-            temp1[i]=p2%10;p2=p2/10;
-        }
-        for(int i=0;i<4;i++)
-        {
-            res=res*10+(temp[i]+temp1[i])%10;
-        }
-        result=Integer.toString(res);
-        if(result.length()<4)
-            result="0"+result;
-        return result;
-
-    }
-
-    private boolean hasWriteSettingsPermission(Context context)
-    {
-        boolean ret = true;
-        // Get the result from below code.
-        ret = Settings.System.canWrite(context);
-        return ret;
-    }
-
-    // Start can modify system settings panel to let user change the write settings permission.
-    private void changeWriteSettingsPermission(Context context)
-    {
-        Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
-        context.startActivity(intent);
     }
 
     public void enterpin(View view) {
@@ -246,8 +194,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    public boolean checkpin()
-    {
+    public boolean checkpin() {
 
         StringBuilder sb=new StringBuilder();
         Iterator i = i1.iterator();
@@ -256,21 +203,19 @@ public class MainActivity extends AppCompatActivity
         {
             sb.append(e[(int)i.next()].getText());
         }
-        if(sb.toString().equals(final_pin))
+        if(sb.toString().equals(secret))
             return true;
         else return false;
     }
 
-    public void checkbrigthness(int k)
-    {
+    public void checkbrigthness(int k) {
         if(i1.contains(k))
             changeScreenBrightness(context, 240);
         else
             changeScreenBrightness(context, 5);
     }
 
-    public void entertext(String k,String t)
-        {
+    public void entertext(String k,String t) {
             if(!k.equals("Del") && !k.equals("Ok"))
             {
                 switch (t) {
@@ -368,20 +313,18 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onStart() {
         super.onStart();
-        checkbrigthness(Integer.parseInt(evalue));
+        checkbrigthness(0);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        checkbrigthness(Integer.parseInt(evalue));
     }
 
 }
 
 
-class LieSequence
-{
+class LieSequence {
     String Lie;
     ArrayList<Integer> i1;
     LieSequence()
@@ -389,8 +332,7 @@ class LieSequence
         Lie=new String("0000000");
     }
 
-    void generate()
-    {
+    void generate() {
         Random rand = new Random();
         i1=new ArrayList<Integer>();
         while(i1.size()!=4)
@@ -402,8 +344,7 @@ class LieSequence
         createSeq(i1);
     }
 
-    void createSeq(ArrayList<Integer> list)
-    {
+    void createSeq(ArrayList<Integer> list) {
         StringBuilder sb=new StringBuilder();
         for(int i=0;i<7;i++)
         {
@@ -415,8 +356,7 @@ class LieSequence
 
     }
 
-    public <T> ArrayList<T> removeDuplicates(ArrayList<T> list)
-    {
+    public <T> ArrayList<T> removeDuplicates(ArrayList<T> list) {
         ArrayList<T> newList = new ArrayList<T>();
         for (T element : list)
         {

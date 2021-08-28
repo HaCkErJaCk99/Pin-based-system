@@ -109,7 +109,7 @@
         android:id="@+id/button26"
         android:layout_width="57dp"
         android:layout_height="49dp"
-        android:background="@drawable/f638799554d4dc45fc36616e1bd9c0f9"
+        android:background="@drawable/i0"
         android:onClick="enterpin"
         android:text=""
         app:layout_constraintBottom_toBottomOf="parent"
